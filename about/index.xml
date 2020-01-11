@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Abouts on 小朋友爱摸鱼</title>
+    <link>/about/</link>
+    <description>Recent content in Abouts on 小朋友爱摸鱼</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>©2019 陈思源.</copyright>
+    <lastBuildDate>Tue, 07 Jan 2020 20:00:20 +0800</lastBuildDate>
+    
+        <atom:link href="/about/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Help</title>
+      <link>/about/help/</link>
+      <pubDate>Tue, 07 Jan 2020 20:00:20 +0800</pubDate>
+      
+      <guid>/about/help/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

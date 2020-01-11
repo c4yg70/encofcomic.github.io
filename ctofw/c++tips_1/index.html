@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.62.2" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>C&#43;&#43; Tips of the Week #1&nbsp;&ndash;&nbsp;小朋友爱摸鱼</title><link rel="stylesheet" href="/css/core.min.770c6e3dae6410caf2afe621306f8d722975c028d73eaa5868a24c69de4743edee167b15943b772e21f488c4a388df8a.css" integrity="sha384-dwxuPa5kEMryr&#43;YhMG&#43;Ncil1wCjXPqpYaKJMad5HQ&#43;3uFnsVlDt3LiH0iMSjiN&#43;K"><body>
+    <div class="base-body"><section id="header" class="site header max-body-width">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">小朋友爱摸鱼</span></a></span>
+        <span class="header right-side"><div class="nav wrap"><nav class="nav"><a class="nav item" href="/categories/">Categories</a><a class="nav item" href="/tags/">Tags</a><a class="nav item" href="/about">About</a><a class="nav item" href="https://gohugo.io/"target="_blank">Hugo</a></nav></div></span></div><div class="site slogan"><span class="title">坚持理想，脚踏实地</span></div></section><div id="content" class="max-body-width"><section class="article header">
+    <h1 class="article title">C++ Tips of the Week #1</h1><p class="article date">Tuesday, January 7, 2020</p></section><article class="article markdown-body"><h2 id="什么是-string_view以及为何你需要关注它">什么是 string_view，以及为何你需要关注它</h2>
+<p>通常有四种方法创建一个以（常）字符串为变量的函数：</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">TakesCharStar</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">)</span><span class="p">;</span>             <span class="c1">// C convention
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">TakesString</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span><span class="p">;</span>             <span class="c1">// Old Standard C++ convention
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">TakesStringView</span><span class="p">(</span><span class="n">absl</span><span class="o">:</span><span class="o">:</span><span class="n">string_view</span> <span class="n">s</span><span class="p">)</span><span class="p">;</span>     <span class="c1">// Abseil C++ convention
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">TakesStringView</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string_view</span> <span class="n">s</span><span class="p">)</span><span class="p">;</span>      <span class="c1">// C++17 C++ convention
+</span><span class="c1"></span>
+</code></pre></div><p>当调用者能够获得给定格式的字符串时，前两种方法工作非常良好。但是，如果需要进行类型转换（不管是 <code>const char*</code> 到 <code>string</code>，还是 <code>string</code> 到 <code>const char</code>），会发生什么呢？</p>
+<p>需要进行 <code>string</code> 到 <code>const char</code> 类型转换的调用者需要使用（高效但不便）的 <code>c_str()</code> 函数：</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">AlreadyHasString</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">TakesCharStar</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>               <span class="c1">// explicit conversion
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>而需要进行 <code>const char*</code> 到 <code>string</code> 的调用者则无需做任何其它的事情（耶！），但是会（方便但低效）地生成一个临时的字符串并拷贝其中的内容（唉！）：</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">AlreadyHasCharStar</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">TakesString</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="p">;</span> <span class="c1">// compiler will make a copy
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h2 id="怎么办">怎么办？</h2>
+<p>Google 建议通过 <code>string_view</code> 来接受此类字符串参数。这是 <code>C++17</code> 的“预先采用”类型。</p>
+<ul>
+<li>如果依赖 <code>C++17</code>，您应该使用 <code>std::string_view</code></li>
+<li>如果不依赖 <code>C++17</code> ，您都应该使用 <code>absl::string_view</code></li>
+</ul>
+<p>一个 <code>string_view</code> 的实例可以被认为是一种对已有字符缓冲区的“检视”。特别地，一个 <code>string_view</code> 只包含一个指针和一个长度，以确定一段字符数据不属于 <code>string_view</code>， 也不能被这次检视修改。通常而言，对 <code>string_view</code> 进行复制是一种表面操作：实际的字符串数据没有被复制。</p>
+<p><code>string_view</code> 同时包含着 <code>const char*</code> 和 <code>const string&amp;</code> 的隐式转换方式。既然 <code>string_view</code> 并没有进行复制，进行隐式拷贝时也就不存在 O(n) 的内存开销。进行 <code>const string&amp;</code> 传递时，时间开销是 O(1)。进行 <code>const char*</code> 传递时，构造函数会自动调用 <code>strlen()</code>（或者，您也可以使用具有两个参数的 <code>string_view</code> 构造函数）。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">AlreadyHasString</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">TakesStringView</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="p">;</span> <span class="c1">// no explicit conversion; convenient!
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">AlreadyHasCharStar</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">TakesStringView</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="p">;</span> <span class="c1">// no copy; efficient!
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div></article><section class="article license">CC-BY</section></div><section id="footer" class="footer max-body-width"><div class="footer-wrap">
+    <p class="copyright">©2019 陈思源.</p>
+    <p class="powerby"><span>Powered by </span><a href="https://gohugo.io" 
+        target="_blank">Hugo</a><span> and the </span><a href="https://themes.gohugo.io/hugo-notepadium/" 
+        target="_blank">Notepadium</a></p>
+</div></section><script src="/js/hljs.min.0799348a91dce12c6be4a73f943cfe78f181f4e6f6ec35c4af0fca1de377879f77cfab03c30f03a174d675737b5a9314.js" integrity="sha384-B5k0ipHc4Sxr5Kc/lDz&#43;ePGB9Ob27DXErw/KHeN3h593z6sDww8DoXTWdXN7WpMU"></script><script>hljs.initHighlightingOnLoad();</script></div>
+</body>
+
+</html>

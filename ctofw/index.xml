@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CTofWs on 小朋友爱摸鱼</title>
+    <link>/ctofw/</link>
+    <description>Recent content in CTofWs on 小朋友爱摸鱼</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>©2019 陈思源.</copyright>
+    <lastBuildDate>Tue, 07 Jan 2020 20:01:48 +0800</lastBuildDate>
+    
+        <atom:link href="/ctofw/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C&#43;&#43; Tips of the Week #1</title>
+      <link>/ctofw/c&#43;&#43;tips_1/</link>
+      <pubDate>Tue, 07 Jan 2020 20:01:48 +0800</pubDate>
+      
+      <guid>/ctofw/c&#43;&#43;tips_1/</guid>
+      <description>什么是 string_view，以及为何你需要关注它 通常有四种方法创建一个以（常）字符串为变量的函数： void TakesCharStar(const char* s); // C convention void TakesString(const string&amp;amp; s); // Old Standard C++ convention void TakesStringView(absl::string_view s); //</description>
+    </item>
+    
+  </channel>
+</rss>
